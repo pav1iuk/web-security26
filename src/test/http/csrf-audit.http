@@ -1,0 +1,74 @@
+### Show all cars
+GET http://localhost:8080/api/v1/cars
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+###
+
+### Read one car
+GET http://localhost:8080/api/v1/cars/1
+Authorization: Basic admin admin
+Accept: application/json
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+###
+
+### Create one car
+POST http://localhost:8080/api/v1/cars
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "id": "4",
+  "brand": "Mercedes",
+  "model": "AMG GT",
+  "year": 2024
+}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+###
+
+### Update one car
+PUT http://localhost:8080/api/v1/cars/4
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "brand": "Mercedes-Benz",
+  "model": "AMG GT Black Series",
+  "year": 2025
+}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+###
+
+### Delete one car
+DELETE http://localhost:8080/api/v1/cars/4
+Authorization: Basic admin admin
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}

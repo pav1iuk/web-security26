@@ -1,10 +1,13 @@
 package chnu.edu.websecurity26.service;
 
 import chnu.edu.websecurity26.model.Car;
+import chnu.edu.websecurity26.repository.CarRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -15,49 +18,39 @@ import java.util.List;
   @since    21.09.2026
 */
 @Service
+@RequiredArgsConstructor
 public class CarService {
-    private final List<Car> cars = new ArrayList<>();
+    private final CarRepository carRepository;
 
     @PostConstruct
-    private void init() {
-        cars.add(new Car("1", "Audi", "RS6", 2023));
-        cars.add(new Car("2", "BMW", "M5", 2024));
-        cars.add(new Car("3", "Porsche", "911 GT3", 2023));
+    void init() {
+        carRepository.deleteAll();
+        List<Car> initialCars = Arrays.asList(
+                new Car("1", "Audi", "RS6", 2023),
+                new Car("2", "BMW", "M5", 2024),
+                new Car("3", "Porsche", "911 GT3", 2023)
+        );
+        carRepository.saveAll(initialCars);
     }
 
     public List<Car> getAllCars() {
-        return cars;
+        return carRepository.findAll();
     }
 
     public Car getCar(String id) {
-        return cars.stream()
-                .filter(car -> car.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return carRepository.findById(id).orElse(null);
     }
 
     public Car createCar(Car car) {
-        cars.add(car);
-        return car;
+        return carRepository.save(car);
     }
 
     public Car updateCar(String id, Car updatedCar) {
-        Car existingCar = getCar(id);
-        if (existingCar != null) {
-            existingCar.setBrand(updatedCar.getBrand());
-            existingCar.setModel(updatedCar.getModel());
-            existingCar.setYear(updatedCar.getYear());
-            return existingCar;
-        }
-        return null;
+        updatedCar.setId(id);
+        return carRepository.save(updatedCar);
     }
 
-    public boolean deleteCar(String id) {
-        Car car = getCar(id);
-        if (car != null) {
-            cars.remove(car);
-            return true;
-        }
-        return false;
+    public void deleteCar(String id) {
+        carRepository.deleteById(id);
     }
 }
