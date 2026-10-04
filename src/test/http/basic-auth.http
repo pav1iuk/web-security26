@@ -1,0 +1,93 @@
+### GET All Cars
+GET http://localhost:8080/api/v1/cars
+Authorization: Basic admin admin
+Accept: application/json
+
+###
+
+### GET Car By ID
+GET http://localhost:8080/api/v1/cars/1
+Authorization: Basic admin admin
+Accept: application/json
+
+###
+
+### GET All Cars
+GET http://localhost:8080/api/v1/cars
+Accept: application/json
+
+###
+
+### GET Car By ID
+GET http://localhost:8080/api/v1/cars/1
+Authorization: Basic admin wrong_password
+Accept: application/json
+
+###
+
+### GET Car By ID
+GET http://localhost:8080/api/v1/cars/2
+Authorization: Basic fake_user 12345
+Accept: application/json
+
+###
+
+### POST Create Car
+POST http://localhost:8080/api/v1/cars
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "id": "10",
+  "brand": "BMW",
+  "model": "M3 Touring",
+  "year": 2024
+}
+
+###
+
+### POST Create Another Car
+POST http://localhost:8080/api/v1/cars
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "id": "11",
+  "brand": "Audi",
+  "model": "RS4",
+  "year": 2023
+}
+
+###
+
+### POST Create Car
+POST http://localhost:8080/api/v1/cars
+Content-Type: application/json
+
+{
+  "id": "12",
+  "brand": "Mercedes",
+  "model": "C63 AMG",
+  "year": 2022
+}
+
+###
+
+### POST Create Car
+POST http://localhost:8080/api/v1/cars
+Authorization: Basic admin 12345
+Content-Type: application/json
+
+{
+  "id": "13",
+  "brand": "Porsche",
+  "model": "Cayman GT4",
+  "year": 2023
+}
+
+###
+
+### GET Created Car
+GET http://localhost:8080/api/v1/cars/10
+Authorization: Basic admin admin
+Accept: application/json
