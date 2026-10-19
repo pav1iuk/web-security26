@@ -7,13 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/*
-  @author   Pavliuk
-  @project  web-security26
-  @class    CarController
-  @version  1.0.0
-  @since    21.09.2026
-*/
 @RestController
 @RequestMapping("/api/v1/cars")
 @RequiredArgsConstructor
@@ -43,5 +36,27 @@ public class CarController {
     @DeleteMapping("/{id}")
     public void deleteCar(@PathVariable String id) {
         carService.deleteCar(id);
+    }
+
+    // --- Endpoints for Multi-user testing ---
+
+    @GetMapping("/hello/admin")
+    public String helloAdmin() {
+        return "Hello Admin!";
+    }
+
+    @GetMapping("/hello/unknown")
+    public String helloUnknown() {
+        return "Hello Unknown!";
+    }
+
+    @GetMapping("/hello/user")
+    public String helloUser() {
+        return "Hello User!";
+    }
+
+    @GetMapping("/hello/man")
+    public String helloMan() {
+        return "Hello Man!";
     }
 }

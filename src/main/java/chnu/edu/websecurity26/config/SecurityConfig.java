@@ -1,18 +1,17 @@
 package chnu.edu.websecurity26.config;
 
-/*
-  @author   Pavliuk
-  @project   web-security26
-  @class  SecurityConfig
-  @version  1.0.0 
-  @since 04.10.2026 - 22.45
-*/
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,9 +22,43 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/index.html").permitAll()
+                        .requestMatchers("/api/v1/cars/hello/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/cars/hello/user").hasRole("USER")
+                        .requestMatchers("/api/v1/cars/hello/man").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/v1/cars/hello/unknown").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin"))
+                .roles("ADMIN")
+                .build();
+
+        UserDetails user = User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("user"))
+                .roles("USER")
+                .build();
+
+        UserDetails superadmin = User.builder()
+                .username("superadmin")
+                .password(passwordEncoder.encode("superadmin"))
+                .roles("SUPERADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin, superadmin);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
