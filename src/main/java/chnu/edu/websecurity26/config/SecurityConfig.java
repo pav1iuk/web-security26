@@ -3,6 +3,7 @@ package chnu.edu.websecurity26.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
@@ -24,10 +26,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/index.html").permitAll()
-                        .requestMatchers("/api/v1/cars/hello/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/v1/cars/hello/user").hasRole("USER")
-                        .requestMatchers("/api/v1/cars/hello/man").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/v1/cars/hello/unknown").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 
