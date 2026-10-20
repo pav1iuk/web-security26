@@ -3,6 +3,7 @@ package chnu.edu.websecurity26.controller;
 import chnu.edu.websecurity26.model.Car;
 import chnu.edu.websecurity26.service.CarService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class CarController {
     }
 
     // --- Endpoints for Multi-user testing ---
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/hello/admin")
     public String helloAdmin() {
         return "Hello Admin!";
@@ -49,12 +50,12 @@ public class CarController {
     public String helloUnknown() {
         return "Hello Unknown!";
     }
-
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/hello/user")
     public String helloUser() {
         return "Hello User!";
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
     @GetMapping("/hello/man")
     public String helloMan() {
         return "Hello Man!";
