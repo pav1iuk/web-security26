@@ -40,7 +40,7 @@ public class CarController {
     }
 
     // --- Endpoints for Multi-user testing ---
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/hello/admin")
     public String helloAdmin() {
         return "Hello Admin!";
@@ -50,12 +50,12 @@ public class CarController {
     public String helloUnknown() {
         return "Hello Unknown!";
     }
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/hello/user")
     public String helloUser() {
         return "Hello User!";
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERADMIN')")
     @GetMapping("/hello/man")
     public String helloMan() {
         return "Hello Man!";

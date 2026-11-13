@@ -1,5 +1,6 @@
 package chnu.edu.websecurity26.config;
 
+import chnu.edu.websecurity26.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.Advisor;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -20,18 +21,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/*
+  @author   george
+  @project   web-security26
+  @class  SecurityConfig
+  @version  1.0.0
+  @since 22/09/2026 - 12.16
+*/
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
-
-//    @Bean
-//    public static PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    private final JwtFilter jwtAuthFilter;
 
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
@@ -43,15 +48,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf ->csrf.disable())
-                .authorizeHttpRequests( req ->
-                        req.requestMatchers("/index.html", "/auth/**").permitAll()
-                                .anyRequest()
-                                .authenticated())
+                .authorizeHttpRequests(req -> req
+                .requestMatchers("/auth/**", "/index.html").permitAll()
+                .anyRequest().authenticated()
+                )
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider);
-        // .addFilterBefore()  // TODO
-
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)  // TODO
+        ;
         return http.build();
     }
 //
