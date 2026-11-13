@@ -12,7 +12,7 @@ import lombok.NonNull;
 @Data
 public class AuthenticationRequest {
     @NonNull
-    private String login;
+    private String email;
     @NonNull
     private String password;
 }
